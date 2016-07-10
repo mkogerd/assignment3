@@ -18,26 +18,15 @@ import java.util.*;
 import java.io.*;
 
 
-
 public class Main {
 
 	public static void main(String[] args) {
 		
 		Scanner kb = new Scanner(System.in);
 		
-		/*String start = kb.next();
-		if(start.equals("hi")){
-			System.out.println("you said hi lol");
-			return;
-		}
-		String end = kb.nextLine();
-		end = end.substring(1);*/
-		
-		String start = "";
-		String end = "";
-		
-		while(!(start.equals("/quit"))){
-			start = kb.next();
+		while(true){
+			String[] arr = kb.nextLine().split(" ");
+			String start = arr[0];
 			
 			if(start.charAt(0) == '/'){
 				// this is where we could add more commands other than just /quit
@@ -48,28 +37,34 @@ public class Main {
 				}
 				else{
 					System.out.println("invalid command " + start);
+					continue;
 				}
 			}
 			
-			end = kb.nextLine();
-			end = end.substring(1);
+			String end = arr[1];
+			
+			
 
-			if(start.length() != 5 || end.length() != 5){
+			/*if(start.length() == end.length()){
 				System.out.println("wrong length   no word ladder could be found between " + start + " and " + end);
-			}
-			else if(invalidWord(start) || invalidWord(end)){
+			}*/
+			/*else if(invalidWord(start) || invalidWord(end)){
 				System.out.println("invalid words   no word ladder could be found between " + start + " and " + end);
-			}
-			else if(notInDict(start) || notInDict(end)){
+			}*/
+			if(notInDict(start) || notInDict(end)){
 				System.out.println("not in dict   no word ladder could be found between " + start + " and " + end);
 			}
-			else{
-				System.out.println("write the code to find the ladder yo"); // this is where we will add the BFS and DFS method calls
-				return;
+			else{ // call either DFS or BFS, do not call both unless you change the code to be able to print both
+				// ArrayList<String> wordTree = getWordLadderDFS(start, end);
+				ArrayList<String> wordTree = getWordLadderBFS(start, end);
+				if(wordTree == null){
+					System.out.println("no word ladder could be found between " + start + " and " + end);
+				}
+				else{
+					System.out.println(wordTree);
+				}
 			}
 		}
-		
-
 	}
 	
 	// if a word contains an invalid character. return true to indicate it is an invalid word
@@ -107,10 +102,39 @@ public class Main {
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
 		
-		// TODO some code
 		Set<String> dict = makeDictionary();
-		// TODO more code
+		Queue<Node> q = new LinkedList<Node>();
+		ArrayList<String> wordTree = new ArrayList<String>();
 		
+		q.add(new Node(start.toUpperCase(), null));
+		while(!(q.isEmpty())){
+			Node head = q.remove();
+			if ( (head.getWord()).equals(end.toUpperCase()) ){
+				while(head.getPrevious() != null){
+					wordTree.add(0, head.getWord());
+					head = head.getPrevious();
+				}
+				wordTree.add(0, head.getWord());
+
+				return wordTree;
+			}
+			else{
+				dict.remove(head.getWord());
+				for(String next : dict){
+					if(next.length() == head.getWord().length()){
+						int matchCount = 0;
+						for(int i = 0; i < start.length(); i++){
+							if( (head.getWord()).charAt(i) == next.charAt(i) ){
+								matchCount++;
+							}
+						}
+						if(matchCount == next.length() - 1){
+							q.add(new Node(next, head));
+						}
+					}	
+				}
+			}
+		}
 		return null; // replace this line later with real return
 	}
     
