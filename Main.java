@@ -27,7 +27,8 @@ public class Main {
 			String start = arr[0];
 			
 			if(start.charAt(0) == '/'){
-				switch (start) {		// Commands go here
+				// Commands go here
+				switch (start) {		
 				case "/quit": 
 					return;
 				default: 
@@ -37,22 +38,16 @@ public class Main {
 			}
 			
 			String end = arr[1];
-
-			if(notInDict(start) || notInDict(end)){
+			
+			ArrayList<String> wordTree = getWordLadderDFS(start, end);
+			//ArrayList<String> wordTree = getWordLadderBFS(start, end);
+			if(wordTree == null){
 				System.out.println("no word ladder could be found between " + start + " and " + end + ".");
 			}
-			else{ 
-				// call either DFS or BFS, do not call both unless you change the code to be able to print both
-				//ArrayList<String> wordTree = getWordLadderDFS(start, end);
-				ArrayList<String> wordTree = getWordLadderBFS(start, end);
-				if(wordTree == null){
-					System.out.println("no word ladder could be found between " + start + " and " + end + ".");
-				}
-				else{
-					System.out.println("a " + wordTree.size() + "-rung word ladder exists between " + start + " and " + end + ".");
-					for (String s: wordTree) {
-						System.out.println("\t" + s.toLowerCase());
-					}
+			else{
+				System.out.println("a " + (wordTree.size() - 2) + "-rung word ladder exists between " + start + " and " + end + ".");
+				for (String s: wordTree) {
+					System.out.println("\t" + s.toLowerCase());
 				}
 			}
 		}
@@ -72,6 +67,10 @@ public class Main {
 	}
 	
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
+		
+		//  Check if words are valid
+		if (notInDict(start) || notInDict(end))
+			return null;
 		
 		// Create data structures
 		Set<String> dict = makeDictionary();
@@ -114,7 +113,11 @@ public class Main {
 	}
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		
+    	
+		// Check if words are valid
+    	if (notInDict(start) || notInDict(end))
+    		return null;
+    	
 		Set<String> dict = makeDictionary();
 		Queue<Node> q = new LinkedList<Node>();
 		ArrayList<String> wordTree = new ArrayList<String>();
@@ -148,7 +151,7 @@ public class Main {
 				}
 			}
 		}
-		return null; // replace this line later with real return
+		return null; // No word ladder found
 	}
     
     // the dictionary is being created with the file five_letter_words.txt
