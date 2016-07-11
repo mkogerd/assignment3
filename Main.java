@@ -40,7 +40,7 @@ public class Main {
 			String end = arr[1];
 			
 			ArrayList<String> wordTree = getWordLadderDFS(start, end);
-			//ArrayList<String> wordTree = getWordLadderBFS(start, end);
+			// ArrayList<String> wordTree = getWordLadderBFS(start, end);
 			if(wordTree == null){
 				System.out.println("no word ladder could be found between " + start + " and " + end + ".");
 			}
@@ -69,7 +69,7 @@ public class Main {
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
 		//  Check if words are valid
-		if (notInDict(start) || notInDict(end))
+		if (notInDict(start) || notInDict(end) || start.equals(end))
 			return null;
 		
 		// Create data structures
@@ -115,7 +115,7 @@ public class Main {
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
     	
 		// Check if words are valid
-    	if (notInDict(start) || notInDict(end))
+    	if (notInDict(start) || notInDict(end) || start.equals(end))
     		return null;
     	
 		Set<String> dict = makeDictionary();
