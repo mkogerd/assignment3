@@ -23,13 +23,17 @@ public class Main {
 		Scanner kb = new Scanner(System.in);
 		
 		while(true){
-			String[] arr = kb.nextLine().split(" ");
+			String in = kb.nextLine();
+			if (in.trim().length() == 0)	// Check that input is not whitespace
+				continue;
+			String[] arr = in.split(" ");
 			String start = arr[0];
 			
 			if(start.charAt(0) == '/'){
 				// Commands go here
 				switch (start) {		
 				case "/quit": 
+					kb.close();
 					return;
 				default: 
 					System.out.println("invalid command " + start);
@@ -37,6 +41,8 @@ public class Main {
 				}
 			}
 			
+			if (arr.length < 2)				// Check that input is at least 2 words
+				continue;
 			String end = arr[1];
 			
 			ArrayList<String> wordTree = getWordLadderDFS(start, end);
